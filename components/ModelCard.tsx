@@ -69,18 +69,29 @@ export default function ModelCard({ model, section = "men" }: ModelCardProps) {
       aria-labelledby={`model-${model.id}-title`}
     >
       <div
-        className="overflow-hidden transition-shadow bg-white rounded-lg shadow-md hover:shadow-lg"
+        className="overflow-hidden bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 hover:-translate-y-1 transition duration-300 ease-out"
         role="article"
       >
         <div className="relative aspect-square overflow-hidden">
           <Link href={`/${section}/${model.id}`}>
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-full group/image">
               <Image
                 src={model.images[0]}
                 alt={model.name}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className={`object-cover ${outOfStock ? "grayscale" : ""}`}
+                className={`object-cover transition-opacity duration-300 opacity-100 group-hover/image:opacity-0 ${
+                  outOfStock ? "grayscale" : ""
+                }`}
+              />
+              <Image
+                src={model.images[1] ?? model.images[0]}
+                alt={`${model.name} alternate view`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className={`object-cover transition-opacity duration-300 opacity-0 group-hover/image:opacity-100 ${
+                  outOfStock ? "grayscale" : ""
+                }`}
               />
             </div>
           </Link>
@@ -104,7 +115,9 @@ export default function ModelCard({ model, section = "men" }: ModelCardProps) {
           {outOfStock ? (
             <span className="text-red-700 font-semibold">Out of Stock</span>
           ) : model.stock < 4 ? (
-            <span className="text-yellow-700 font-semibold">3 left in stock</span>
+            <span className="text-yellow-700 font-semibold">
+              3 left in stock
+            </span>
           ) : (
             <span className="text-green-700 font-semibold">In Stock!</span>
           )}

@@ -63,6 +63,7 @@
   --color-card-size-text: var(--card-size-text);
   --color-nav-bg: var(--nav-bg);
   --color-nav-text: var(--nav-text);
+  --color-nav-text-2: var(--nav-text-2);
   --color-nav-text-active: var(--nav-text-active);
   --color-sidebar-mobile: var(--sidebar-mobile);
   --color-sidebar-mobile-links: var(--sidebar-mobile-links);
@@ -110,6 +111,7 @@
   --card-size-text: #E0E1DD;
   --nav-bg: #003049;
   --nav-text: #E9C46A;
+  --nav-text-2: #fca311;
   --nav-text-active: #E9C46A;
   --sidebar-mobile: #F2E8CF;
   --sidebar-mobile-text: #023047;

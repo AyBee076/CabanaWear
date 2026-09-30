@@ -24,7 +24,7 @@ export default function CartPage() {
     <div className="max-w-5xl mx-auto px-4 py-12 mt-[8ch]">
       <h1 className="text-3xl font-semibold mb-8">Order Summary</h1>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 font-fredoka">
         {/* Cart items */}
         <div className="flex-1 flex flex-col gap-4">
           {items.map((item) => (

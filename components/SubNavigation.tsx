@@ -20,7 +20,7 @@ export default function SubNavigation() {
 
   return (
     <div className="mb-5">
-      <ul className="flex  gap-1">
+      <ul className="flex  gap-1 font-fredoka text-2xl">
         <li>
           <Button
             variant={isActive(`/${section}`) ? "default" : "ghost"}

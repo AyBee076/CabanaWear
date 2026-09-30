@@ -10,7 +10,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className=" text-white bg-[#001524]">
+    <footer className=" text-white bg-nav-bg">
       
       <div
         className="
