@@ -143,7 +143,7 @@ export default function NavBar() {
                 </div>
               ) : (
                 <Link href="/email-password">
-                  <Button className="w-fit text-nowrap px-4 py-2 text-nav-text  duration-300 cursor-pointer rounded-2xl border-2 border-nav-text  hover:border-[#fca311] font-grotesque  hover:text-[#fca311]  bg-opacity-0 hover:scale-110 hover:-translate-y-1 transition-all ease-out">
+                  <Button className="w-fit text-nowrap px-6 py-5 text-nav-text text-lg duration-300 cursor-pointer rounded-2xl border-2 border-nav-text  hover:border-[#fca311] font-grotesque  hover:text-[#fca311]  bg-opacity-0 hover:scale-110 hover:-translate-y-1 transition-all ease-out">
                     Sign In
                   </Button>
                 </Link>
