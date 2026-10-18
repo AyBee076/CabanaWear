@@ -3,7 +3,7 @@
     "id": 1,
     "name": "Grass Fed Beef Patties",
     "description": "Juicy burger patties made with grass-fed beef",
-    "likes": 203,
+    
     "images": [
       "/images/women_pics/IMG_5297.jpg",
       "/images/women_pics/IMG_5305.jpg",
@@ -21,7 +21,6 @@
     "id": 2,
     "name": "Organic Granola",
     "description": "Healthy granola made with oats and honey.",
-    "likes": 102,
     "images": [
       "/images/women_pics/IMG_5316.jpg",
       "/images/women_pics/IMG_5310.jpg",
@@ -40,7 +39,7 @@
     "id": 3,
     "name": "Vegetarian Sausage Links",
     "description": "Plant-based sausage links with spices and herbs.",
-    "likes": "97",
+
     "images": [
       "/images/women_pics/IMG_5322.jpg",
       "/images/women_pics/IMG_5321.jpg"
@@ -57,7 +56,7 @@
     "id": 4,
     "name": "Chili Lime Shrimp",
     "description": "Frozen shrimp seasoned with chili and lime, perfect for quick dinners.",
-    "likes": 125,
+    
     "images": [
       "/images/women_pics/IMG_5326.jpg",
       "/images/women_pics/IMG_5324.jpg",
@@ -75,8 +74,7 @@
     "id": 5,
     "name": "Coconut Cream",
     "description": "Rich cream extracted from coconut milk, ideal for desserts.",
-    "likes": 32,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5338.jpg",
       "/images/women_pics/IMG_5335.jpg"
     ],
@@ -92,8 +90,7 @@
     "id": 6,
     "name": "Pumpkin Spice Muffins",
     "description": "Moist and flavorful muffins packed with fall spices and pumpkin puree.",
-    "likes": 24,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5341.jpg",
       "/images/women_pics/IMG_5345.jpg"
     ],
@@ -109,7 +106,7 @@
     "id": 7,
     "name": "Herbed Chicken Breast",
     "description": "Marinated chicken breast seasoned with herbs, ready for grilling.",
-    "likes": 234,
+    
     "images": [
       "/images/women_pics/IMG_5351.jpg",
       "/images/women_pics/IMG_5352.jpg"
@@ -126,7 +123,7 @@
     "id": 8,
     "name": "Noise Reduction Headphones",
     "description": "Passive noise reduction headphones for focus.",
-    "likes": 234,
+    
     "images": [
       "/images/women_pics/IMG_5355.jpg",
       "/images/women_pics/IMG_5358.jpg",
@@ -144,8 +141,7 @@
     "id": 9,
     "name": "Camping Chair with Cooler",
     "description": "Foldable chair equipped with a cooler pouch.",
-    "likes": 15,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5364.jpg",
       "/images/women_pics/IMG_5368.jpg"
     ],
@@ -161,8 +157,7 @@
     "id": 10,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5372.jpg",
       "/images/women_pics/IMG_5373.jpg"
     ],
@@ -178,8 +173,7 @@
     "id": 11,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5379.jpg",
       "/images/women_pics/IMG_5380.jpg"
     ],
@@ -195,8 +189,7 @@
     "id": 12,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5384.jpg",
       "/images/women_pics/IMG_5388.jpg"
     ],
@@ -212,8 +205,7 @@
     "id": 13,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5391.jpg",
       "/images/women_pics/IMG_5392.jpg"
     ],
@@ -229,8 +221,7 @@
     "id": 14,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5396.jpg",
       "/images/women_pics/IMG_5399.jpg"
     ],
@@ -246,8 +237,7 @@
     "id": 15,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5406.jpg",
       "/images/women_pics/IMG_5409.jpg"
     ],
@@ -263,8 +253,7 @@
     "id": 16,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5411.jpg",
       "/images/women_pics/IMG_5414.jpg"
     ],
@@ -280,8 +269,7 @@
     "id": 17,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5420.jpg",
       "/images/women_pics/IMG_5422.jpg"
     ],
@@ -297,8 +285,7 @@
     "id": 18,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5424.jpg",
       "/images/women_pics/IMG_5432.jpg"
     ],
@@ -314,8 +301,7 @@
     "id": 19,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5434.jpg",
       "/images/women_pics/IMG_5440.jpg"
     ],
@@ -331,8 +317,7 @@
     "id": 20,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5443.jpg",
       "/images/women_pics/IMG_5447.jpg"
     ],
@@ -348,8 +333,7 @@
     "id": 21,
     "name": "Classic Caesar Salad Kit",
     "description": "Everything you need for a fresh and delicious Caesar salad.",
-    "likes": 14,
-    "images": [
+        "images": [
       "/images/women_pics/IMG_5451.jpg",
       "/images/women_pics/IMG_5454.jpg"
     ],

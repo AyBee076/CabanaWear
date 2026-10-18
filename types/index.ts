@@ -5,7 +5,6 @@ export type Model = {
   id: number
   name: string
   description: string
-  likes: number
   images: string[]
   category: string
   price: number

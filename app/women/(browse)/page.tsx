@@ -1,5 +1,5 @@
 import ModelsGrid from "../../../components/ModelGrid";
-import { getWomenData } from "@/lib/models";
+import { getModels } from "@/lib/models";
 
 
 type SearchParams = {
@@ -16,7 +16,7 @@ export default async function page({
   const { query, price, colors } = await searchParams;
 
   const normalizedQuery = query?.toLowerCase() || "";
-  const allModels = await getWomenData();
+  const allModels = await getModels("women");
 
   const filtered = allModels.filter((model) => {
     // Search filter

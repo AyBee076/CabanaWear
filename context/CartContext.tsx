@@ -8,8 +8,8 @@ import {
 } from "react";
 import { setItem } from "../utils/localStorage";
 
-export type CartItem = {
-  id: number;
+type CartItem = {
+  id: string; // was number
   name: string;
   price: number;
   image: string;
@@ -21,8 +21,8 @@ export type CartItem = {
 type CartContextType = {
   items: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: number, size: string) => void;
-  updateQuantity: (id: number, size: string, quantity: number) => void;
+  removeFromCart: (id: string, size: string) => void;
+  updateQuantity: (id: string, size: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -97,18 +97,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const removeFromCart = (id: number, size: string) => {
-    setItems((prev) => prev.filter((i) => !(i.id === id && i.size === size)));
-  };
+  const removeFromCart = (id: string, size: string) => {
+  setItems((prev) => prev.filter((i) => !(i.id === id && i.size === size)));
+};
 
-  const updateQuantity = (id: number, size: string, quantity: number) => {
-    if (quantity < 1) return removeFromCart(id, size);
-    setItems((prev) =>
-      prev.map((i) =>
-        i.id === id && i.size === size ? { ...i, quantity } : i
-      )
-    );
-  };
+const updateQuantity = (id: string, size: string, quantity: number) => {
+  if (quantity < 1) return removeFromCart(id, size);
+  setItems((prev) =>
+    prev.map((i) =>
+      i.id === id && i.size === size ? { ...i, quantity } : i
+    )
+  );
+};
 
   const clearCart = () => setItems([]);
 
