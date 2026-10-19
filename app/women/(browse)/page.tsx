@@ -14,15 +14,17 @@ export default async function page({
   searchParams: SearchParams;
 }) {
   const { query, price, colors } = await searchParams;
-
+  const selectedColors = colors
+    ? colors.split(",").map((c) => c.trim().toLowerCase())
+    : []
   const normalizedQuery = query?.toLowerCase() || "";
   const allModels = await getModels("women");
 
   const filtered = allModels.filter((model) => {
     // Search filter
-    if (normalizedQuery) {
+   if (normalizedQuery) {
       const matchesName = model.name.toLowerCase().includes(normalizedQuery);
-      const matchesDescription = model.description
+      const matchesDescription = (model.description ?? "")
         .toLowerCase()
         .includes(normalizedQuery);
       if (!matchesName && !matchesDescription) return false;
@@ -39,10 +41,12 @@ export default async function page({
     }
 
     // Color filter
-    if (colors) {
-      const selectedColors = colors.split(",");
-      if (!selectedColors.includes(model.color)) return false;
-    }
+    if (selectedColors.length > 0) {
+  const hasColor = model.variants.some(
+    (v) => v.color && selectedColors.includes(v.color.toLowerCase())
+  );
+  if (!hasColor) return false;
+}
 
     return true;
   });
