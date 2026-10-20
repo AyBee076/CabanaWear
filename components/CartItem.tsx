@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { TrashIcon, MinusIcon, PlusIcon } from "@phosphor-icons/react";
-import { useCart } from "../app/context/CartContext";
-import type { CartItem as CartItemType } from "../app/context/CartReducer";
+import { useCart } from "../app/Context/CartContext";
+import type { CartItem as CartItemType } from "../app/Context/CartReducer";
 
 export default function CartItem({ item }: { item: CartItemType }) {
   const { dispatch } = useCart();
