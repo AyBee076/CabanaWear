@@ -1,66 +1,3 @@
-// import modelsData from "../data/models.json"
-// import womenData from "../data/women.json"
-// import accessoriesData from "../data/accessories.json"
-// import type { Model, GetModelsParams } from "../types"
-
-// const models = modelsData as unknown as Model[]
-// const women = womenData as unknown as Model[]
-// const accessories = accessoriesData as unknown as Model[]
-
-// export async function getModels({ category }: GetModelsParams = {}): Promise<Model[]> {
-//   let filteredModels = [...models]
-//   if (category) {
-//     filteredModels = models.filter((model) => model.category === category)
-//   }
-//   return filteredModels
-// }
-
-// export async function getWomenData({ category }: GetModelsParams = {}): Promise<Model[]> {
-//   let filteredModels = [...women]
-//   if (category) {
-//     filteredModels = women.filter((model) => model.category === category)
-//   }
-//   return filteredModels
-// }
-
-// export async function getAccessoriesData({ category }: GetModelsParams = {}): Promise<Model[]> {
-//   let filteredModels = [...accessories]
-//   if (category) {
-//     filteredModels = accessories.filter((model) => model.category === category)
-//   }
-//   return filteredModels
-// }
-
-// export async function getModelById(id: string | number): Promise<Model> {
-//   const foundModel = models.find(
-//     (model) => model.id.toString() === id.toString()
-//   )
-//   if (!foundModel) {
-//     throw new Error(`Model with id ${id} not found`)
-//   }
-//   return foundModel
-// }
-
-// export async function getWomenDataById(id: string | number): Promise<Model> {
-//   const foundModel = women.find(
-//     (model) => model.id.toString() === id.toString()
-//   )
-//   if (!foundModel) {
-//     throw new Error(`Model with id ${id} not found`)
-//   }
-//   return foundModel
-// }
-
-// export async function getAccessoriesDataId(id: string | number): Promise<Model> {
-//   const foundModel = models.find(
-//     (model) => model.id.toString() === id.toString()
-//   )
-//   if (!foundModel) {
-//     throw new Error(`Model with id ${id} not found`)
-//   }
-//   return foundModel
-// }
-
 import { createClient } from "@/lib/supabase/server";
 
 type ProductImageRow = {
@@ -130,7 +67,7 @@ const images = [...(products_images ?? [])]
   };
 }
 
-export async function getModels(section: "men" | "women"): Promise<Model[]> {
+export async function getModels(section: "men" | "women" | "accessories"): Promise<Model[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -166,4 +103,38 @@ export async function getModelById(id: string | number): Promise<Model> {
   }
 
   return toModel(data);
+}
+
+export async function getModelsByCategory(
+  categoryName: string,
+  section?: "men" | "women" | "accessories"
+): Promise<Model[]> {
+  const supabase = await createClient();
+
+  let query = supabase
+    .from("products")
+    .select(
+      `
+      *,
+      categories!inner ( id, name ),
+      product_variants ( * ),
+      products_images ( image_url, image_type, is_primary, display_order )
+    `
+    )
+    .eq("categories.name", categoryName);
+
+  if (section) {
+    query = query.eq("section", section);
+  }
+
+  const { data, error } = await query
+    .order("created_at", { ascending: false })
+    .returns<ProductRow[]>();
+
+  if (error) {
+    console.error("Failed to fetch products by category:", error.message);
+    return [];
+  }
+
+  return (data ?? []).map(toModel);
 }
