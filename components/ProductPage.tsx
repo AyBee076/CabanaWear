@@ -37,7 +37,8 @@ export default function ProductPage({
 }: ProductPageProps) {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  // Exactly one size can be selected at a time (null = nothing selected yet)
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   /* ------------------------- data from Supabase ------------------------- */
 
@@ -56,18 +57,16 @@ export default function ProductPage({
   );
   const outOfStock = totalStock < 1;
 
-  // The most the shopper can add per size:
-  // the lowest stock among the selected sizes, or the total if none is selected yet
-  const maxQuantity =
-    selectedSizes.length > 0
-      ? Math.min(...selectedSizes.map((s) => stockBySize.get(s) ?? 0))
-      : totalStock;
+  // The most the shopper can add:
+  // the stock of the selected size, or the total if none is selected yet
+  const maxQuantity = selectedSize
+    ? (stockBySize.get(selectedSize) ?? 0)
+    : totalStock;
 
   // Stock number shown in the indicator: the selected size's stock if one is picked
-  const displayStock =
-    selectedSizes.length === 1
-      ? (stockBySize.get(selectedSizes[0]) ?? 0)
-      : totalStock;
+  const displayStock = selectedSize
+    ? (stockBySize.get(selectedSize) ?? 0)
+    : totalStock;
 
   const images = model.images ?? [];
   const categoryName = model.category?.name ?? "";
@@ -79,29 +78,27 @@ export default function ProductPage({
 
   /* -------------------------------- handlers -------------------------------- */
 
-  // Select or unselect a size. Sizes with no stock can't be selected.
+  // Select a size. Picking a different size replaces the current one;
+  // clicking the selected size again unselects it.
+  // Sizes with no stock can't be selected.
   const toggleSize = (size: string) => {
     if ((stockBySize.get(size) ?? 0) < 1) return;
-    setSelectedSizes((prev) =>
-      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
-    );
+    setSelectedSize((prev) => (prev === size ? null : size));
     setQuantity(1); // reset so quantity can't exceed the new size's stock
   };
 
-  // Add one cart item for every selected size
+  // Add the one selected size to the cart
   const handleAddToBag = () => {
-    if (selectedSizes.length === 0 || outOfStock) return;
+    if (!selectedSize || outOfStock) return;
     const qty = Math.min(quantity, Math.max(1, maxQuantity));
-    selectedSizes.forEach((size) => {
-      addToCart({
-        id: model.id,
-        name: model.name,
-        price,
-        image: images[0] ?? "",
-        size,
-        quantity: qty,
-        section,
-      });
+    addToCart({
+      id: model.id,
+      name: model.name,
+      price,
+      image: images[0] ?? "",
+      size: selectedSize,
+      quantity: qty,
+      section,
     });
   };
 
@@ -165,7 +162,7 @@ export default function ProductPage({
               {ALL_SIZES.map((item) => {
                 // Does this product have this size in stock in Supabase?
                 const isAvailable = (stockBySize.get(item) ?? 0) > 0;
-                const isSelected = selectedSizes.includes(item);
+                const isSelected = selectedSize === item;
 
                 // Three looks: selected, available, unavailable
                 const stateClass = isSelected
@@ -187,7 +184,7 @@ export default function ProductPage({
                 );
               })}
             </div>
-            {selectedSizes.length === 0 && !outOfStock && (
+            {!selectedSize && !outOfStock && (
               <p className="text-xs text-red-400 mt-1 font">
                 Please select a size
               </p>
@@ -225,7 +222,7 @@ export default function ProductPage({
               <span className="w-6 text-center">{quantity}</span>
               <button
                 type="button"
-                // can't go above the stock of the selected size(s)
+                // can't go above the stock of the selected size
                 onClick={() =>
                   setQuantity((q) => Math.min(Math.max(1, maxQuantity), q + 1))
                 }
@@ -243,7 +240,7 @@ export default function ProductPage({
                 size="lg"
                 className="bg-gray-900 w-full sm:flex-1 p-2 whitespace-nowrap text-sm sm:text-base"
                 onClick={handleAddToBag}
-                disabled={selectedSizes.length === 0 || outOfStock}
+                disabled={!selectedSize || outOfStock}
               >
                 ADD TO BAG
               </Button>

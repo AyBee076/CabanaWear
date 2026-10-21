@@ -21,7 +21,8 @@ type ModelCardProps = {
 const ALL_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
 export default function ModelCard({ model, section = "men" }: ModelCardProps) {
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  // Exactly one size can be selected at a time (null = nothing selected yet)
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const { addToCart } = useCart();
 
   /* ------------------------- data from Supabase ------------------------- */
@@ -73,30 +74,28 @@ export default function ModelCard({ model, section = "men" }: ModelCardProps) {
 
   /* -------------------------------- handlers -------------------------------- */
 
-  // Select or unselect a size. Sizes with no stock can't be selected.
+  // Select a size. Picking a different size replaces the current one;
+  // clicking the selected size again unselects it.
+  // Sizes with no stock can't be selected.
   const toggleSize = (e: React.MouseEvent, size: string) => {
     e.preventDefault();
     if (outOfStock) return;
     if ((stockBySize.get(size) ?? 0) < 1) return;
-    setSelectedSizes((prev) =>
-      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
-    );
+    setSelectedSize((prev) => (prev === size ? null : size));
   };
 
-  // Add one cart item for every selected size
+  // Add the one selected size to the cart
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (outOfStock || selectedSizes.length === 0) return;
-    selectedSizes.forEach((size) => {
-      addToCart({
-        id: model.id,
-        name: model.name,
-        price,
-        image: primaryImage ?? "",
-        size,
-        quantity: 1,
-        section,
-      });
+    if (outOfStock || !selectedSize) return;
+    addToCart({
+      id: model.id,
+      name: model.name,
+      price,
+      image: primaryImage ?? "",
+      size: selectedSize,
+      quantity: 1,
+      section,
     });
   };
 
@@ -183,8 +182,8 @@ export default function ModelCard({ model, section = "men" }: ModelCardProps) {
             {ALL_SIZES.map((size) => {
               // Does this product have this size in stock in Supabase?
               const isAvailable = (stockBySize.get(size) ?? 0) > 0;
-              // Has the shopper picked this size?
-              const isSelected = selectedSizes.includes(size);
+              // Is this the size the shopper picked?
+              const isSelected = selectedSize === size;
 
               // Three looks:
               // 1. selected    -> your selected style
@@ -210,12 +209,12 @@ export default function ModelCard({ model, section = "men" }: ModelCardProps) {
             })}
           </div>
 
-          {/* Add to cart: adds every selected size */}
+          {/* Add to cart: adds the selected size */}
           <div className="mt-5">
             <Button
               className="w-full bg-card-btn"
               onClick={handleAddToCart}
-              disabled={outOfStock || selectedSizes.length === 0}
+              disabled={outOfStock || !selectedSize}
             >
               Add to Cart <ShoppingCartIcon size={32} />
             </Button>
