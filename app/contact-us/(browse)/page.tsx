@@ -1,7 +1,10 @@
-import React from 'react'
+import AboutUs from "@/components/AboutUs";
 
-export default function page() {
+
+export default function Page() {
   return (
-    <div>page</div>
+    <>
+    <AboutUs />
+    </>
   )
 }
