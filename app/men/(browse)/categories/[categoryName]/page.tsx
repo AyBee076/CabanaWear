@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import ModelsGrid from "@/components/ModelGrid";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getModels } from "@/lib/models";
-   import { parsePriceRange } from "@/lib/priceRanges";
+import { parsePriceRange } from "@/lib/priceRanges";
 import type { Section } from "@/types";
 
 const SECTION: Section = "men"; // use "women" in the women's copy of this page
@@ -31,7 +31,10 @@ export default async function CategoryPage({
     category: category.displayName,
     query: query?.trim(),
     colors: colors
-      ? colors.split(",").map((c) => c.trim()).filter(Boolean)
+      ? colors
+          .split(",")
+          .map((c) => c.trim())
+          .filter(Boolean)
       : undefined,
     ...parsePriceRange(price),
   });

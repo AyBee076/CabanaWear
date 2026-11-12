@@ -1,36 +1,46 @@
-"use client";
+// app/accessories/categories/[categoryName]/page.tsx
+import { notFound } from "next/navigation";
+import ModelsGrid from "@/components/ModelGrid";
+import { getCategoryBySlug } from "@/lib/categories";
+import { getModels } from "@/lib/models";
+import { parsePriceRange } from "@/lib/priceRanges";
+import type { Section } from "@/types";
 
-import { usePathname } from "next/navigation";
-import { getAllCategories } from "@/lib/categories";
-import type { Category } from "@/types";
-import NavLink from "./NavLink";
+const SECTION: Section = "accessories";
 
-export default function CategoriesNav() {
-  const pathname = usePathname();
-  const section = pathname.startsWith("/women") ? "women" : "men";
-  const categories: Category[] = getAllCategories(section);
+type SearchParams = {
+  query?: string;
+  price?: string;
+  colors?: string;
+};
+
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ categoryName: string }>;
+  searchParams: Promise<SearchParams>;
+}) {
+  const { categoryName } = await params; // slug from the URL
+  const { query, price, colors } = await searchParams;
+
+  const category = await getCategoryBySlug(categoryName, SECTION);
+  if (!category) notFound();
+
+  const models = await getModels(SECTION, {
+    category: category.displayName,
+    query: query?.trim(),
+    colors: colors
+      ? colors.split(",").map((c) => c.trim()).filter(Boolean)
+      : undefined,
+    ...parsePriceRange(price),
+  });
 
   return (
-    <aside className="absolute top-0 z-10 w-full bg-white border-b border-gray-200 md:w-64 md:top-1/3 md:-translate-y-1/2 md:border-none p-4">
-      <div className="relative">
-        <nav className="w-full overflow-x-auto md:overflow-visible scrollbar-hide">
-          <ul className="flex px-4 py-3 space-x-4 whitespace-nowrap md:flex-col md:p-0 md:space-x-0 md:space-y-2">
-            {categories.map((item) => {
-              const href = `/${section}/categories/${item.slug}`;
-              return (
-                <NavLink
-                  key={item.slug}
-                  href={href}
-                  isActive={pathname === href}
-                >
-                  {item.displayName}
-                </NavLink>
-              );
-            })}
-          </ul>
-        </nav>
-        <div className="absolute top-0 right-0 w-8 h-full pointer-events-none bg-linear-to-l from-white to-transparent md:hidden" />
-      </div>
-    </aside>
+    <ModelsGrid
+      title={category.displayName}
+      models={models}
+      section={SECTION}
+    />
   );
 }

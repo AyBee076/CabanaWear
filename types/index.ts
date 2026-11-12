@@ -90,5 +90,5 @@ export type NavLinkProps = {
 
 
 
-export const SECTIONS = ["men", "women"] as const;
+export const SECTIONS = ["men", "women", "accessories"] as const;
 export type Section = (typeof SECTIONS)[number];
