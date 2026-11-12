@@ -1,16 +1,20 @@
-"use client"
+"use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import type { Category } from "@/types";
-import { getAllCategories } from "@/lib/categories";
+import type { Category, Section } from "@/types";
 import { Button } from "@/components/ui/button";
 
-export default function SubNavigation() {
+interface SubNavigationProps {
+  section: Section;
+  categories: Category[];
+}
+
+export default function SubNavigation({
+  section,
+  categories,
+}: SubNavigationProps) {
   const pathname = usePathname();
   const router = useRouter();
-
-  const section = pathname.startsWith("/women") ? "women" : "men";
-  const categories: Category[] = getAllCategories(section);
 
   const isActive = (href: string) => pathname === href;
 
@@ -20,7 +24,7 @@ export default function SubNavigation() {
 
   return (
     <div className="mb-5">
-      <ul className="flex  gap-1 font-fredoka text-2xl">
+      <ul className="flex gap-1 font-fredoka text-2xl">
         <li>
           <Button
             variant={isActive(`/${section}`) ? "default" : "ghost"}
@@ -30,7 +34,7 @@ export default function SubNavigation() {
             All
           </Button>
         </li>
-        {categories.map((item: Category) => {
+        {categories.map((item) => {
           const href = `/${section}/categories/${item.slug}`;
           return (
             <li key={item.slug}>
@@ -44,9 +48,6 @@ export default function SubNavigation() {
             </li>
           );
         })}
-      </ul>
-      <ul>
-        
       </ul>
     </div>
   );

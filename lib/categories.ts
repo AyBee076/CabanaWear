@@ -1,47 +1,44 @@
-import menCategories from "../data/categories.json";
-import categoriesWomen from "../data/categorieswomen.json";
-import { Category } from "../types";
-import modelsData from "../data/models.json"
-import womenData from "../data/women.json"
-import type { Model, PriceRange } from "@/types"
+// lib/categories.ts
+import "server-only";
+import { createClient } from "@/lib/supabase/server";
+import { slugify } from "@/lib/slug";
+import type { Category, Section } from "@/types";
 
-const models = modelsData as unknown as Model[]
-const women = womenData as unknown as Model[]
+export async function getCategories(section: Section): Promise<Category[]> {
+  const supabase = await createClient();
 
-export function getUniqueColors(section: string = "men"): string[] {
-  const data = section === "women" ? women : models
-  const allColors = data.map((model) => model.color)
-  return [...new Set(allColors)]
+  const { data, error } = await supabase
+    .from("categories")
+    .select("id, name, products!inner(section)")
+    .eq("products.section", section);
+
+  if (error) {
+    console.error("Failed to load categories:", error.message);
+    return [];
+  }
+
+  // a category appears once per product, so remove duplicates
+  const unique = new Map<string, string>();
+  for (const row of data ?? []) unique.set(row.id, row.name);
+
+  return [...unique.values()]
+    .sort((a, b) => a.localeCompare(b))
+    .map((name) => ({ slug: slugify(name), displayName: name }));
 }
 
-export function getPriceRanges(section: string = "men"): PriceRange[] {
-  const data = section === "women" ? women : models
-  const prices = data.map((model) => model.price)
-  const max = Math.max(...prices)
-  const min = Math.min(...prices)
-
-  const ranges: PriceRange[] = ["All"]
-  if (min < 10) ranges.push("Under $10")
-  if (max >= 10 && min <= 20) ranges.push("$10 - $20")
-  if (max >= 20 && min <= 40) ranges.push("$20 - $40")
-  if (max > 40) ranges.push("Over $40")
-
-  return ranges
+// Returns undefined when the slug doesn't match any category in that section
+export async function getCategoryBySlug(
+  slug: string,
+  section: Section
+): Promise<Category | undefined> {
+  const categories = await getCategories(section);
+  return categories.find((c) => c.slug === slug);
 }
 
-export function getAllCategories(section: string = "men"): Category[] {
-  return section === "women" ? categoriesWomen : menCategories
-}
-
-export function getCategoryBySlug(slug: string): Category {
-  const allCats = [...menCategories, ...categoriesWomen ]
-  const category = allCats.find((c) => c.slug === slug)
-  if (!category) throw new Error(`Category with slug ${slug} not found`)
-  return category
-}
-
-
-export function getDisplayNameFromSlug(slug: string): string {
-  const category = getCategoryBySlug(slug);
-  return category.displayName;
+export async function getDisplayNameFromSlug(
+  slug: string,
+  section: Section
+): Promise<string | undefined> {
+  const category = await getCategoryBySlug(slug, section);
+  return category?.displayName;
 }

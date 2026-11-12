@@ -1,5 +1,6 @@
 import ModelsGrid from "@/components/ModelGrid";
 import { getModels } from "@/lib/models";
+   import { parsePriceRange } from "@/lib/priceRanges";
 
 type SearchParams = {
   query?: string;
@@ -14,43 +15,13 @@ export default async function Page({
 }) {
   const { query, price, colors } = await searchParams;
 
-  const normalizedQuery = query?.trim().toLowerCase() ?? "";
-  const selectedColors = colors
-    ? colors.split(",").map((c) => c.trim().toLowerCase())
-    : [];
-
-  const allModels = await getModels("men");
-
-  const filtered = allModels.filter((model) => {
-    // Search filter
-    if (normalizedQuery) {
-      const matchesName = model.name.toLowerCase().includes(normalizedQuery);
-      const matchesDescription = (model.description ?? "")
-        .toLowerCase()
-        .includes(normalizedQuery);
-      if (!matchesName && !matchesDescription) return false;
-    }
-
-    // Price filter
-    if (price && price !== "All") {
-      const p = Number(model.price);
-      if (price === "Under $10" && p >= 10) return false;
-      if (price === "$10 - $20" && (p < 10 || p > 20)) return false;
-      if (price === "$20 - $40" && (p < 20 || p > 40)) return false;
-      if (price === "Over $40" && p <= 40) return false;
-    }
-
-    // Color filter
-if (selectedColors.length > 0) {
-  const hasColor = model.variants.some(
-    (v) => v.color && selectedColors.includes(v.color.toLowerCase())
-  );
-  if (!hasColor) return false;
-}
-    return true;
+  const models = await getModels("men", {
+    query: query?.trim(),
+    colors: colors
+      ? colors.split(",").map((c) => c.trim()).filter(Boolean)
+      : undefined,
+    ...parsePriceRange(price),
   });
 
-  console.log(JSON.stringify(allModels[0]?.variants, null, 2));
-
-  return <ModelsGrid title="Men" models={filtered} section="men" />;
+  return <ModelsGrid title="Men" models={models} section="men" />;
 }

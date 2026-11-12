@@ -2,30 +2,23 @@
 
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { Category, PriceRange } from "@/types";
-import {
-  getAllCategories,
-  getUniqueColors,
-  getPriceRanges,
-} from "@/lib/categories";
+import type { PriceRange, Section } from "@/types";
 
-export default function Sidebar() {
+interface SidebarProps {
+  section: Section;
+  priceRanges: PriceRange[];
+  colors: string[];
+}
+
+export default function Sidebar({ priceRanges, colors }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const section = pathname.startsWith("/women") ? "women" : "men";
-  const priceRanges: PriceRange[] = getPriceRanges(section);
-  const categories: Category[] = getAllCategories(section);
-  const colors: string[] = getUniqueColors(section);
 
   const [price, setPrice] = useState<PriceRange>("All");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleCategory = (href: string) => {
-    router.push(href);
-  };
 
   const handlePrice = (range: PriceRange) => {
     setPrice(range);

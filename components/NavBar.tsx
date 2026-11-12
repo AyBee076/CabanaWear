@@ -32,6 +32,11 @@ export default function NavBar() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const isActive = (href: string) =>
+  href === "/"
+    ? pathname === "/"
+    : pathname === href || pathname.startsWith(`${href}/`);
+
   // -- Escape key to close --
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -216,11 +221,11 @@ export default function NavBar() {
             <li key={item.name} onClick={closeNavBar}>
               <Link
                 href={item.href}
-                className={`block px-3 py-3 rounded-lg text-base font-medium ease-in-out duration-200 ${
-                  pathname === item.href
-                    ? "text-nav-text-active "
-                    : "text-nav-bg hover:bg-[#E9C46A]"
-                }`}
+               className={`block px-3 py-3 rounded-lg text-base font-medium ease-in-out duration-200 ${
+  isActive(item.href)
+    ? "text-nav-text-active "
+    : "text-nav-bg hover:bg-[#E9C46A]"
+}`}
               >
                 {item.name}
               </Link>
@@ -268,8 +273,8 @@ export default function NavBar() {
               key={item.name}
               onClick={closeNavBar}
               className={`hover:text-[#fca311] text-sm lg:text-lg text-nowrap ease-in-out duration-200 ${
-                pathname === item.href ? "text-[#fca311]" : "text-neutral-600"
-              } cursor-pointer`}
+  isActive(item.href) ? "text-[#fca311]" : "text-neutral-600"
+} cursor-pointer`}
             >
               <Link href={item.href}>{item.name}</Link>
             </li>

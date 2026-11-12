@@ -87,3 +87,8 @@ export type NavLinkProps = {
     children: ReactNode
     isActive?: boolean
 }
+
+
+
+export const SECTIONS = ["men", "women"] as const;
+export type Section = (typeof SECTIONS)[number];

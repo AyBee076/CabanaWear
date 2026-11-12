@@ -1,9 +1,15 @@
+// app/men/(browse)/categories/[categoryName]/page.tsx
+import { notFound } from "next/navigation";
 import ModelsGrid from "@/components/ModelGrid";
 import { getCategoryBySlug } from "@/lib/categories";
-import { getModelsByCategory } from "@/lib/models";
-import type { CategoryPageProps } from "@/types";
+import { getModels } from "@/lib/models";
+   import { parsePriceRange } from "@/lib/priceRanges";
+import type { Section } from "@/types";
+
+const SECTION: Section = "men"; // use "women" in the women's copy of this page
 
 type SearchParams = {
+  query?: string;
   price?: string;
   colors?: string;
 };
@@ -11,41 +17,30 @@ type SearchParams = {
 export default async function CategoryPage({
   params,
   searchParams,
-}: CategoryPageProps & { searchParams: Promise<SearchParams> }) {
-  const { categoryName } = await params;
-  const { price, colors } = await searchParams;
+}: {
+  params: Promise<{ categoryName: string }>;
+  searchParams: Promise<SearchParams>;
+}) {
+  const { categoryName } = await params; // this is the slug from the URL
+  const { query, price, colors } = await searchParams;
 
-  const category = getCategoryBySlug(categoryName);
-  const allModels = await getModelsByCategory(category.displayName, "women");
+  const category = await getCategoryBySlug(categoryName, SECTION);
+  if (!category) notFound();
 
-  const selectedColors = colors
-    ? colors.split(",").map((c) => c.trim().toLowerCase())
-    : [];
-
-  const filtered = allModels.filter((model) => {
-    if (price && price !== "All") {
-      const p = Number(model.price);
-      if (price === "Under $10" && p >= 10) return false;
-      if (price === "$10 - $20" && (p < 10 || p > 20)) return false;
-      if (price === "$20 - $40" && (p < 20 || p > 40)) return false;
-      if (price === "Over $40" && p <= 40) return false;
-    }
-
-    if (selectedColors.length > 0) {
-      const hasColor = model.variants.some(
-        (v) => v.color && selectedColors.includes(v.color.toLowerCase())
-      );
-      if (!hasColor) return false;
-    }
-
-    return true;
+  const models = await getModels(SECTION, {
+    category: category.displayName,
+    query: query?.trim(),
+    colors: colors
+      ? colors.split(",").map((c) => c.trim()).filter(Boolean)
+      : undefined,
+    ...parsePriceRange(price),
   });
 
   return (
     <ModelsGrid
       title={category.displayName}
-      models={filtered}
-      section="men"
+      models={models}
+      section={SECTION}
     />
   );
 }

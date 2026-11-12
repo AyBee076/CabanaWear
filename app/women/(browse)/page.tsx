@@ -1,6 +1,7 @@
-import ModelsGrid from "../../../components/ModelGrid";
+// app/women/(browse)/page.tsx
+import ModelsGrid from "@/components/ModelGrid";
 import { getModels } from "@/lib/models";
-
+   import { parsePriceRange } from "@/lib/priceRanges";
 
 type SearchParams = {
   query?: string;
@@ -8,52 +9,20 @@ type SearchParams = {
   colors?: string;
 };
 
-export default async function page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 }) {
   const { query, price, colors } = await searchParams;
-  const selectedColors = colors
-    ? colors.split(",").map((c) => c.trim().toLowerCase())
-    : []
-  const normalizedQuery = query?.toLowerCase() || "";
-  const allModels = await getModels("women");
 
-  const filtered = allModels.filter((model) => {
-    // Search filter
-   if (normalizedQuery) {
-      const matchesName = model.name.toLowerCase().includes(normalizedQuery);
-      const matchesDescription = (model.description ?? "")
-        .toLowerCase()
-        .includes(normalizedQuery);
-      if (!matchesName && !matchesDescription) return false;
-    }
-
-    // Price filter
-    if (price && price !== "All") {
-      if (price === "Under $10" && model.price >= 10) return false;
-      if (price === "$10 - $20" && (model.price < 10 || model.price > 20))
-        return false;
-      if (price === "$20 - $40" && (model.price < 20 || model.price > 40))
-        return false;
-      if (price === "Over $40" && model.price <= 40) return false;
-    }
-
-    // Color filter
-    if (selectedColors.length > 0) {
-  const hasColor = model.variants.some(
-    (v) => v.color && selectedColors.includes(v.color.toLowerCase())
-  );
-  if (!hasColor) return false;
-}
-
-    return true;
+  const models = await getModels("women", {
+    query: query?.trim(),
+    colors: colors
+      ? colors.split(",").map((c) => c.trim()).filter(Boolean)
+      : undefined,
+    ...parsePriceRange(price),
   });
 
-  return (
-    <>
-      <ModelsGrid title="Women" models={filtered} section="women" />
-    </>
-  );
+  return <ModelsGrid title="Women" models={models} section="women" />;
 }
